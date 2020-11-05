@@ -18,7 +18,7 @@ public class UtilizatorService {
     public Optional<Utilizator> addUtilizator(Utilizator utilizator) {
         Random random = new Random();
         do {
-            utilizator.setId((long)(random.nextInt(9000) + 1000));
+            utilizator.setId((long)(random.nextInt(Integer.MAX_VALUE)));
         } while(repo.findOne(utilizator.getId()).isPresent());
 
         return repo.save(utilizator);

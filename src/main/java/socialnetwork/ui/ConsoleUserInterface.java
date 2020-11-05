@@ -9,6 +9,8 @@ import socialnetwork.service.PrietenieService;
 import socialnetwork.service.PrieteniiService;
 import socialnetwork.service.UtilizatorService;
 
+import java.io.UncheckedIOException;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class ConsoleUserInterface {
@@ -27,70 +29,78 @@ public class ConsoleUserInterface {
 
     private void uiAddUser() {
         System.out.println("Introduceti prenumele: ");
-        if (!scanner.hasNextLine()) {
-            throw new UiException("Introduceti datele!\n");
-        }
         String firstName = scanner.nextLine();
 
         System.out.println("Introduceti numele: ");
-        if (!scanner.hasNextLine()) {
-            throw new UiException("Introduceti datele!\n");
-        }
         String lastName = scanner.nextLine();
 
         Utilizator utilizator = new Utilizator(firstName, lastName);
 
-        System.out.println("Am adaugat: " + utilizatorService.addUtilizator(utilizator));
+        Optional<Utilizator> rez = utilizatorService.addUtilizator(utilizator);
+        rez.ifPresent(x -> System.out.println("Am adaugat: " + x.toString()));
     }
 
     private void uiDeleteUser() {
+        int id;
         System.out.println("Introduceti id-ul: ");
-        if (!scanner.hasNextInt()) {
+        try {
+            id = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
             throw new UiException("Introduceti un numar intreg!\n");
         }
-        int id = scanner.nextInt();
 
         Utilizator utilizator = new Utilizator("", "");
         utilizator.setId((long) id);
 
-        System.out.println("A fost sters: " + utilizatorService.deleteUtilizator(utilizator));
+        Optional<Utilizator> rez = utilizatorService.addUtilizator(utilizator);
+        rez.ifPresent(x -> System.out.println("Am sters: " + x.toString()));
     }
 
     private void uiAddFriendship() {
         System.out.println("Introduceti id-ul primului utilizator: ");
-        if (!scanner.hasNextInt()) {
+        int id1, id2;
+
+        try {
+            id1 = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
             throw new UiException("Introduceti un numar intreg!\n");
         }
-        int id1 = scanner.nextInt();
-
 
         System.out.println("Introduceti id-ul celui de-al doilea utilizator: ");
-        if (!scanner.hasNextInt()) {
+
+        try {
+            id2 = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
             throw new UiException("Introduceti un numar intreg!\n");
         }
-        int id2 = scanner.nextInt();
 
         Prietenie prt = new Prietenie(id1, id2);
-        prietenieService.addPrietenie(prt);
-
+        Optional<Prietenie> rez = prietenieService.addPrietenie(prt);
+        rez.ifPresent(prietenie -> System.out.println(prietenie.toString()));
     }
 
     private void uiDeleteFriendship() {
 
         System.out.println("Introduceti id-ul primului utilizator: ");
-        if (!scanner.hasNextInt()) {
+        int id1, id2;
+
+        try {
+            id1 = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
             throw new UiException("Introduceti un numar intreg!\n");
         }
-        int id1 = scanner.nextInt();
 
         System.out.println("Introduceti id-ul celui de-al doilea utilizator: ");
-        if (!scanner.hasNextInt()) {
+
+        try {
+            id2 = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
             throw new UiException("Introduceti un numar intreg!\n");
         }
-        int id2 = scanner.nextInt();
 
         Prietenie prt = new Prietenie(id1, id2);
-        prietenieService.deletePrietenie(prt);
+        Optional<Prietenie> rez = prietenieService.deletePrietenie(prt);
+        rez.ifPresent(prietenie -> System.out.println("Am sters: " + prietenie.toString()));
 
     }
 
@@ -106,8 +116,6 @@ public class ConsoleUserInterface {
 
 
     public void run() {
-        String cmd = "";
-
         while (true) {
             try {
                 System.out.println("Opreste: quit");
@@ -116,7 +124,7 @@ public class ConsoleUserInterface {
                 System.out.println("Comenzi statistica: nr_com, com_soc");
                 System.out.println("Introduceti o comanda: ");
 
-
+                String cmd;
                 Scanner scanner = new Scanner(System.in);
                 cmd = scanner.nextLine();
 

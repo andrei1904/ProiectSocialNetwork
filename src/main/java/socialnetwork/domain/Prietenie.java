@@ -42,4 +42,12 @@ public class Prietenie extends Entity<Tuple<Long,Long>> {
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "Prietenie{" +
+                "idPrieten1=" + idPrieten1 +
+                ", idPrieten2=" + idPrieten2 +
+                '}';
+    }
 }
