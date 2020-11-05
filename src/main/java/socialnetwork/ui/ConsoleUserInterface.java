@@ -37,7 +37,11 @@ public class ConsoleUserInterface {
         Utilizator utilizator = new Utilizator(firstName, lastName);
 
         Optional<Utilizator> rez = utilizatorService.addUtilizator(utilizator);
-        rez.ifPresent(x -> System.out.println("Am adaugat: " + x.toString()));
+        if (rez.isPresent()) {
+            System.out.println("Am adaugat: " + rez.get().toString());
+        } else {
+            System.out.println("Nu se poate efectua operatia!");
+        }
     }
 
     private void uiDeleteUser() {
@@ -53,7 +57,11 @@ public class ConsoleUserInterface {
         utilizator.setId((long) id);
 
         Optional<Utilizator> rez = utilizatorService.addUtilizator(utilizator);
-        rez.ifPresent(x -> System.out.println("Am sters: " + x.toString()));
+        if (rez.isPresent()) {
+            System.out.println("Am sters: " + rez.get().toString());
+        } else {
+            System.out.println("Nu se poate efectua operatia!");
+        }
     }
 
     private void uiAddFriendship() {
@@ -76,7 +84,11 @@ public class ConsoleUserInterface {
 
         Prietenie prt = new Prietenie(id1, id2);
         Optional<Prietenie> rez = prietenieService.addPrietenie(prt);
-        rez.ifPresent(prietenie -> System.out.println(prietenie.toString()));
+        if (rez.isPresent()) {
+            System.out.println("Am adaugat: " + rez.get().toString());
+        } else {
+            System.out.println("Nu se poate efectua operatia!");
+        }
     }
 
     private void uiDeleteFriendship() {
@@ -100,7 +112,11 @@ public class ConsoleUserInterface {
 
         Prietenie prt = new Prietenie(id1, id2);
         Optional<Prietenie> rez = prietenieService.deletePrietenie(prt);
-        rez.ifPresent(prietenie -> System.out.println("Am sters: " + prietenie.toString()));
+        if (rez.isPresent()) {
+            System.out.println("Am sters: " + rez.get().toString());
+        } else {
+            System.out.println("Nu se poate efectua operatia!");
+        }
 
     }
 
@@ -112,7 +128,6 @@ public class ConsoleUserInterface {
     private void comunitateSociabila() {
         System.out.println("Cea mai sociabila comunitate este: " + prieteniiService.comunitateSociabila());
     }
-
 
 
     public void run() {
