@@ -2,9 +2,11 @@ package socialnetwork.service;
 
 import socialnetwork.domain.Prietenie;
 import socialnetwork.domain.Tuple;
+import socialnetwork.domain.Utilizator;
 import socialnetwork.repository.Repository;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Optional;
 
 public class PrietenieService {
@@ -30,6 +32,5 @@ public class PrietenieService {
     public Iterable<Prietenie> getAll() {
         return repo.findAll();
     }
-
 
 }

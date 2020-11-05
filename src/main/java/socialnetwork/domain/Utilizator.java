@@ -29,6 +29,10 @@ public class Utilizator extends Entity<Long>{
         this.lastName = lastName;
     }
 
+    public void setFriends(List<Utilizator> friends) {
+        this.friends = friends;
+    }
+
     public List<Utilizator> getFriends() {
         return friends;
     }

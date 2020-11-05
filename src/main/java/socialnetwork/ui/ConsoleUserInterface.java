@@ -56,12 +56,19 @@ public class ConsoleUserInterface {
         Utilizator utilizator = new Utilizator("", "");
         utilizator.setId((long) id);
 
-        Optional<Utilizator> rez = utilizatorService.addUtilizator(utilizator);
+        Optional<Utilizator> rez = utilizatorService.deleteUtilizator(utilizator);
         if (rez.isPresent()) {
             System.out.println("Am sters: " + rez.get().toString());
         } else {
             System.out.println("Nu se poate efectua operatia!");
         }
+    }
+
+    private void uiAfisareUseri() {
+        for (Utilizator utilizator : utilizatorService.getAll()) {
+            prieteniiService.incarcaPrieteniiLaUser(utilizator);
+        }
+        utilizatorService.getAll().forEach(System.out::println);
     }
 
     private void uiAddFriendship() {
@@ -120,6 +127,10 @@ public class ConsoleUserInterface {
 
     }
 
+    private void uiAfisarePrietenii(){
+        prietenieService.getAll().forEach(System.out::println);
+    }
+
     private void numarComunitati() {
         int nr = prieteniiService.numarComunitati();
         System.out.println("Numarul de comunitati este: " + nr);
@@ -134,8 +145,8 @@ public class ConsoleUserInterface {
         while (true) {
             try {
                 System.out.println("Opreste: quit");
-                System.out.println("Comenzi user: add, delete");
-                System.out.println("Comenzi prietenie: add_f, delete_f");
+                System.out.println("Comenzi user: add, delete, afisare");
+                System.out.println("Comenzi prietenie: add_f, delete_f, afisare_f");
                 System.out.println("Comenzi statistica: nr_com, com_soc");
                 System.out.println("Introduceti o comanda: ");
 
@@ -161,6 +172,12 @@ public class ConsoleUserInterface {
                         break;
                     case "com_soc":
                         comunitateSociabila();
+                        break;
+                    case "afisare":
+                        uiAfisareUseri();
+                        break;
+                    case "afisare_f":
+                        uiAfisarePrietenii();
                         break;
                     case "quit":
                         scanner.close();
