@@ -2,14 +2,17 @@ package socialnetwork.repository.memory;
 
 import socialnetwork.domain.Entity;
 import socialnetwork.domain.validators.Validator;
+import socialnetwork.repository.RepoException;
 import socialnetwork.repository.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 
 public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<ID, E> {
-
-    private Validator<E> validator;
+    private final Validator<E> validator;
     Map<ID, E> entities;
 
 
@@ -20,56 +23,64 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
 
 
     @Override
-    public E findOne(ID id) {
-        if (id == null)
-            throw new IllegalArgumentException("id must be not null");
-        return entities.get(id);
+    public Optional<E> findOne(ID id) {
+        if (id == null) {
+            throw new RepoException("Id must be not null");
+        }
+        return Optional.ofNullable(entities.get(id));
     }
 
 
     @Override
     public Iterable<E> findAll() {
-        return entities.values();
+        return entities.
+                entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toSet());
     }
 
 
     @Override
-    public E save(E entity) {
+    public Optional<E> save(E entity) {
         if (entity == null)
-            throw new IllegalArgumentException("entity must be not null");
+            throw new RepoException("entity must be not null");
+
         validator.validate(entity);
 
-        if (entities.get(entity.getId()) != null) {
-            return entity;
-        } else entities.put(entity.getId(), entity);
-        return null;
+        if (entities.get(entity.getId()) != null) { // daca exista
+            return Optional.empty();
+        } else entities.put(entity.getId(), entity); // daca nu exista
+        return Optional.of(entity);
     }
 
 
     @Override
-    public E delete(ID id) {
+    public Optional<E> delete(ID id) {
         if (id == null)
-            throw new IllegalArgumentException("id must be not null");
+            throw new RepoException("id must be not null");
 
-        return entities.remove(id);
+        return Optional.ofNullable(entities.remove(id));
     }
 
 
     @Override
-    public E update(E entity) {
+    public Optional<E> update(E entity) {
 
         if (entity == null)
-            throw new IllegalArgumentException("entity must be not null!");
+            throw new RepoException("entity must be not null!");
         validator.validate(entity);
 
         entities.put(entity.getId(), entity);
 
         if (entities.get(entity.getId()) != null) {
             entities.put(entity.getId(), entity);
-            return null;
+            return Optional.empty();
         }
-        return entity;
+        return Optional.of(entity);
+    }
 
+
+    @Override
+    public int size() {
+        return entities.size();
     }
 
 }
