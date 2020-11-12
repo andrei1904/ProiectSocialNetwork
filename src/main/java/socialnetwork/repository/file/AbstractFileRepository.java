@@ -1,5 +1,6 @@
 package socialnetwork.repository.file;
 
+import org.graalvm.compiler.nodes.calc.IntegerDivRemNode;
 import socialnetwork.domain.Entity;
 import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.domain.validators.Validator;
@@ -59,7 +60,6 @@ public abstract class AbstractFileRepository<ID, E extends Entity<ID>> extends I
             return e;
         }
         return Optional.empty(); // daca nu exista
-
     }
 
 
@@ -73,6 +73,21 @@ public abstract class AbstractFileRepository<ID, E extends Entity<ID>> extends I
             }
         } else {
             throw new RepoException("Id-ul nu este in lista de utilizatori!\n");
+        }
+        return e;
+    }
+
+    @Override
+    public Optional<E> update(E entity) {
+        Optional<E> e= super.update(entity);
+
+        if (e.isPresent()) // nu exista
+            return Optional.empty();
+        else {
+            deleteAllFromFile();
+            for (E en : super.findAll()) {
+                writeToFile(en);
+            }
         }
         return e;
     }
@@ -95,6 +110,7 @@ public abstract class AbstractFileRepository<ID, E extends Entity<ID>> extends I
         }
 
     }
+
 
 }
 

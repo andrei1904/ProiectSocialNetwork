@@ -1,30 +1,49 @@
 package socialnetwork.ui;
 
 
-import socialnetwork.domain.Prietenie;
-import socialnetwork.domain.Utilizator;
+import socialnetwork.domain.*;
 import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.repository.RepoException;
-import socialnetwork.service.PrietenieService;
-import socialnetwork.service.PrieteniiService;
-import socialnetwork.service.UtilizatorService;
+import socialnetwork.service.*;
 
 import java.io.UncheckedIOException;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 public class ConsoleUserInterface {
     UtilizatorService utilizatorService;
     PrietenieService prietenieService;
     PrieteniiService prieteniiService;
+    MessageService messageService;
+    CererePrietenieService cererePrietenieService;
+    Map<String, Runnable> commands = new HashMap<>();
+
 
     Scanner scanner = new Scanner(System.in);
 
-    public ConsoleUserInterface(UtilizatorService utilizatorService, PrietenieService prietenieService,
-                                PrieteniiService prieteniiService) {
+
+    public ConsoleUserInterface(UtilizatorService utilizatorService, PrietenieService prietenieService, PrieteniiService prieteniiService, MessageService messageService, CererePrietenieService cererePrietenieService) {
         this.utilizatorService = utilizatorService;
         this.prietenieService = prietenieService;
         this.prieteniiService = prieteniiService;
+        this.messageService = messageService;
+        this.cererePrietenieService = cererePrietenieService;
+    }
+
+    private void addCommands() {
+        commands.put("add", this::uiAddUser);
+        commands.put("delete", this::uiDeleteUser);
+        commands.put("add_f", this::uiAddFriendship);
+        commands.put("delete_f", this::uiDeleteFriendship);
+        commands.put("nr_com", this::uiNumarComunitati);
+        commands.put("com_soc", this::uiComunitateSociabila);
+        commands.put("prieteni_user", this::uiPrieteniUtilizator);
+        commands.put("prieteni_data", this::uiPrieteniiUtilizatorDupaLuna);
+        commands.put("send", this::uiSendMessage);
+        commands.put("reply", this::uiReplyMessage);
+        commands.put("show_msg", this::uiShowMessages);
+        commands.put("send_f", this::uiSendFriendRequest);
+        commands.put("confirm_f", this::uiConfirmFriendRequest);
+
     }
 
     private void uiAddUser() {
@@ -56,18 +75,20 @@ public class ConsoleUserInterface {
         Utilizator utilizator = new Utilizator("", "");
         utilizator.setId((long) id);
 
+
         Optional<Utilizator> rez = utilizatorService.deleteUtilizator(utilizator);
         if (rez.isPresent()) {
             System.out.println("Am sters: " + rez.get().toString());
         } else {
             System.out.println("Nu se poate efectua operatia!");
         }
+        prietenieService.deletePrietenie(id);
     }
 
     private void uiAfisareUseri() {
-        for (Utilizator utilizator : utilizatorService.getAll()) {
-            prieteniiService.incarcaPrieteniiLaUser(utilizator);
-        }
+//        for (Utilizator utilizator : utilizatorService.getAll()) {
+//            prieteniiService.incarcaPrieteniiLaUser(utilizator);
+//        }
         utilizatorService.getAll().forEach(System.out::println);
     }
 
@@ -89,13 +110,14 @@ public class ConsoleUserInterface {
             throw new UiException("Introduceti un numar intreg!\n");
         }
 
-        Prietenie prt = new Prietenie(id1, id2);
-        Optional<Prietenie> rez = prietenieService.addPrietenie(prt);
+        Optional<Prietenie> rez = prieteniiService.addPrietenie(id1, id2);
         if (rez.isPresent()) {
             System.out.println("Am adaugat: " + rez.get().toString());
         } else {
             System.out.println("Nu se poate efectua operatia!");
         }
+
+
     }
 
     private void uiDeleteFriendship() {
@@ -117,8 +139,7 @@ public class ConsoleUserInterface {
             throw new UiException("Introduceti un numar intreg!\n");
         }
 
-        Prietenie prt = new Prietenie(id1, id2);
-        Optional<Prietenie> rez = prietenieService.deletePrietenie(prt);
+        Optional<Prietenie> rez = prieteniiService.deletePrietenie(id1, id2);
         if (rez.isPresent()) {
             System.out.println("Am sters: " + rez.get().toString());
         } else {
@@ -127,65 +148,202 @@ public class ConsoleUserInterface {
 
     }
 
-    private void uiAfisarePrietenii(){
+    private void uiAfisarePrietenii() {
         prietenieService.getAll().forEach(System.out::println);
     }
 
-    private void numarComunitati() {
+    private void uiNumarComunitati() {
         int nr = prieteniiService.numarComunitati();
         System.out.println("Numarul de comunitati este: " + nr);
     }
 
-    private void comunitateSociabila() {
+    private void uiComunitateSociabila() {
         System.out.println("Cea mai sociabila comunitate este: " + prieteniiService.comunitateSociabila());
     }
 
+    private void uiPrieteniUtilizator() {
+        System.out.println("Introduceti id-ul utilizatorului: ");
+        int id;
+
+        try {
+            id = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new UiException("Introduceti un numar intreg!\n");
+        }
+
+        List<DtoPrieten> lista = prieteniiService.prieteniUtilizator(id);
+        if (lista.isEmpty()) {
+            System.out.println("Utilizatorul nu are prieteni!\n");
+        } else {
+            lista.forEach(System.out::println);
+        }
+    }
+
+    private void uiPrieteniiUtilizatorDupaLuna() {
+        System.out.println("Introduceti id-ul utilizatorului: ");
+        int id;
+
+        try {
+            id = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new UiException("Introduceti un numar intreg!\n");
+        }
+
+        System.out.println("Introduceti luna dupa care filtrati: ");
+
+        int luna;
+        try {
+            luna = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new UiException("Introduceti un numar intreg!\n");
+        }
+
+        List<DtoPrieten> lista = prieteniiService.prieteniiUtilizatorDupaLuna(id, luna);
+        if (lista.isEmpty()) {
+            System.out.println("Nu exista prietenii care sa indeplineasca aceste criterii!\n");
+        } else {
+            lista.forEach(System.out::println);
+        }
+    }
+
+    private void uiSendMessage() {
+        System.out.println("Introduceti id-ul utilizatorului care trimite mesajul: ");
+        int id1;
+
+        try {
+            id1 = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new UiException("Introduceti un numar intreg!\n");
+        }
+
+        System.out.println("Introduceti id-ul utilizatorului care primeste mesajul: ");
+        int id2;
+
+        try {
+            id2 = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new UiException("Introduceti un numar intreg!\n");
+        }
+
+        System.out.println("Introduceti mesajul: ");
+        String text = scanner.nextLine();
+
+        messageService.sendMessage(id1, id2, text);
+    }
+
+    private void uiReplyMessage() {
+        System.out.println("Introduceti id-ul utilizatorului care raspunde: ");
+        int idUtilizator;
+
+        try {
+            idUtilizator = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new UiException("Introduceti un numar intreg!\n");
+        }
+
+        System.out.println("Introduceti id-ul mesajului la care raspundeti: ");
+        int idMesaj;
+
+        try {
+            idMesaj = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new UiException("Introduceti un numar intreg!\n");
+        }
+
+        System.out.println("Introduceti mesajul: ");
+        String text = scanner.nextLine();
+
+        messageService.replyMessage(idUtilizator, idMesaj, text);
+    }
+
+    private void uiSendFriendRequest() {
+        System.out.println("Introduceti id-ul care trimite cererea: ");
+        int id1;
+
+        try {
+            id1 = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new UiException("Introduceti un numar intreg!\n");
+        }
+
+        System.out.println("Introduceti id-ul utilizatorului la care se trimite cererea: ");
+        int id2;
+
+        try {
+            id2 = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new UiException("Introduceti un numar intreg!\n");
+        }
+
+        cererePrietenieService.sendFriendRequest(id1, id2);
+    }
+
+    private void uiConfirmFriendRequest() {
+        System.out.println("Introduceti id-ul cererii: ");
+        int id;
+
+        try {
+            id = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new UiException("Introduceti un numar intreg!\n");
+        }
+
+        System.out.println("Introduceti 1 daca acceptati sau 0 daca refuzati cererea: ");
+        int raspuns;
+
+        try {
+            raspuns = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new UiException("Introduceti un numar intreg!\n");
+        }
+
+        cererePrietenieService.confirmFriendRequest(id, raspuns);
+    }
+
+    private void uiShowMessages() {
+        System.out.println("Introduceti id-ul primului utilizator: ");
+        int id1;
+
+        try {
+            id1 = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new UiException("Introduceti un numar intreg!\n");
+        }
+
+        System.out.println("Introduceti id-ul celui de-al doilea utilizator: ");
+        int id2;
+
+        try {
+            id2 = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new UiException("Introduceti un numar intreg!\n");
+        }
+
+        messageService.showMessages(id1, id2).forEach(System.out::println);
+    }
 
     public void run() {
+        addCommands();
+
         while (true) {
             try {
                 System.out.println("Opreste: quit");
                 System.out.println("Comenzi user: add, delete, afisare");
-                System.out.println("Comenzi prietenie: add_f, delete_f, afisare_f");
+                System.out.println("Comenzi prietenie: send_f, add_f, delete_f, afisare_f");
                 System.out.println("Comenzi statistica: nr_com, com_soc");
+                System.out.println("Comenzi afisare: prieteni_user, prieteni_data, show_msg");
+                System.out.println("Comenzi mesaj: send, reply");
                 System.out.println("Introduceti o comanda: ");
 
                 String cmd;
-                Scanner scanner = new Scanner(System.in);
                 cmd = scanner.nextLine();
 
-                switch (cmd) {
-                    case "add":
-                        uiAddUser();
-                        break;
-                    case "delete":
-                        uiDeleteUser();
-                        break;
-                    case "add_f":
-                        uiAddFriendship();
-                        break;
-                    case "delete_f":
-                        uiDeleteFriendship();
-                        break;
-                    case "nr_com":
-                        numarComunitati();
-                        break;
-                    case "com_soc":
-                        comunitateSociabila();
-                        break;
-                    case "afisare":
-                        uiAfisareUseri();
-                        break;
-                    case "afisare_f":
-                        uiAfisarePrietenii();
-                        break;
-                    case "quit":
-                        scanner.close();
-                        return;
-                    default:
-                        System.out.println("Nu exista aceasta comanda!");
-                        break;
+                if (cmd.equals("quit")) {
+                    scanner.close();
+                    return;
                 }
+                commands.get(cmd).run();
+
             } catch (UiException exception) {
                 System.out.println("UiException: " + exception.getMessage());
             } catch (RepoException exception) {

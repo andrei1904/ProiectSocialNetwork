@@ -52,8 +52,7 @@ public class Utilizator extends Entity<Long>{
         if (!(o instanceof Utilizator)) return false;
         Utilizator that = (Utilizator) o;
         return getFirstName().equals(that.getFirstName()) &&
-                getLastName().equals(that.getLastName()) &&
-                getFriends().equals(that.getFriends());
+                getLastName().equals(that.getLastName());
     }
 
     @Override

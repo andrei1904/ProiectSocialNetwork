@@ -6,6 +6,7 @@ import socialnetwork.repository.RepoException;
 import socialnetwork.repository.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<ID, E> {
     private final Validator<E> validator;
-    Map<ID, E> entities;
+    protected Map<ID, E> entities;
 
 
     public InMemoryRepository(Validator<E> validator) {
@@ -32,9 +33,9 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
 
 
     @Override
-    public Iterable<E> findAll() {
+    public List<E> findAll() {
         return entities.
-                entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toSet());
+                entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
     }
 
 
@@ -47,7 +48,9 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
 
         if (entities.get(entity.getId()) != null) { // daca exista
             return Optional.empty();
-        } else entities.put(entity.getId(), entity); // daca nu exista
+        } else { // daca nu exista
+            entities.put(entity.getId(), entity);
+        }
         return Optional.of(entity);
     }
 
@@ -68,13 +71,13 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
             throw new RepoException("entity must be not null!");
         validator.validate(entity);
 
-        entities.put(entity.getId(), entity);
+//        entities.put(entity.getId(), entity);
 
-        if (entities.get(entity.getId()) != null) {
+        if (entities.get(entity.getId()) != null) { // daca exista
             entities.put(entity.getId(), entity);
             return Optional.empty();
         }
-        return Optional.of(entity);
+        return Optional.of(entity); // nu exista
     }
 
 

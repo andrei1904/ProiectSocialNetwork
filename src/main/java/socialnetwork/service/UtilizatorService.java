@@ -1,8 +1,7 @@
 package socialnetwork.service;
 
-import socialnetwork.domain.Entity;
 import socialnetwork.domain.Utilizator;
-import socialnetwork.domain.validators.Validator;
+import socialnetwork.repository.RepoException;
 import socialnetwork.repository.Repository;
 
 import java.util.Optional;
@@ -32,5 +31,21 @@ public class UtilizatorService {
         return repo.findAll();
     }
 
-    ///TO DO: add other methods
+    public Utilizator getOne(int id) {
+        Optional<Utilizator> utilizator = repo.findOne((long)id);
+        if (utilizator.isPresent()) {
+            return utilizator.get();
+        } else {
+            throw new RepoException("Acest utilizator nu exista");
+        }
+    }
+
+    public boolean existaUtilizator(int id) {
+        return repo.findOne((long) id).isPresent();
+    }
+
+    public int size() {
+        return repo.size();
+    }
+
 }
