@@ -35,7 +35,7 @@ public class Main {
         PrietenieService prietenieService = new PrietenieService(prietenieFileRepository);
         PrieteniiService prieteniiService = new PrieteniiService(prietenieService, userService);
         MessageService messageService = new MessageService(prietenieService, userService, repoFileMessage);
-        CererePrietenieService cererePrietenieService = new CererePrietenieService(prieteniiService,
+        CererePrietenieService cererePrietenieService = new CererePrietenieService(prieteniiService, userService,
                 repoFileCererePrietenei);
 
         ConsoleUserInterface consoleUserInterface = new ConsoleUserInterface(userService, prietenieService,

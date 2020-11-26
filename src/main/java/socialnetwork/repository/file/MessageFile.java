@@ -3,12 +3,11 @@ package socialnetwork.repository.file;
 import socialnetwork.domain.Message;
 import socialnetwork.domain.Utilizator;
 import socialnetwork.domain.validators.Validator;
-import socialnetwork.repository.RepoException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 public class MessageFile extends AbstractFileRepository<Integer, Message> {
 
@@ -22,17 +21,25 @@ public class MessageFile extends AbstractFileRepository<Integer, Message> {
         Utilizator utilizator = new Utilizator(attributes.get(2), attributes.get(3));
         utilizator.setId(Long.parseLong(attributes.get(1)));
 
-        Utilizator utilizator2 = new Utilizator(attributes.get(5), attributes.get(6));
-        utilizator2.setId(Long.parseLong(attributes.get(4)));
+        int nrUtilizatori = Integer.parseInt(attributes.get(4));
 
-        Message message = new Message(utilizator, utilizator2, attributes.get(7),
-                LocalDateTime.parse(attributes.get(8)));
+        List<Utilizator> to = new ArrayList<>();
+        int poz = 5;
+        for (int i = 0; i < nrUtilizatori; i++, poz += 3) {
+            Utilizator u = new Utilizator(attributes.get(poz + 1),
+                                            attributes.get(poz + 2));
+            u.setId(Long.parseLong(attributes.get(poz)));
+            to.add(u);
+        }
+
+        Message message = new Message(utilizator, to, attributes.get(poz),
+                LocalDateTime.parse(attributes.get(poz + 1)));
         message.setId(Integer.parseInt(attributes.get(0)));
 
-        if (attributes.get(9).equals("null")) {
+        if (attributes.get(poz + 2).equals("-1")) {
             message.setReply(-1);
         } else {
-            message.setReply(Integer.parseInt(attributes.get(9)));
+            message.setReply(Integer.parseInt(attributes.get(poz + 2)));
         }
 
         return message;
@@ -43,19 +50,29 @@ public class MessageFile extends AbstractFileRepository<Integer, Message> {
                 utilizator.getLastName();
     }
 
+    private String writeListUtilizator(List<Utilizator> list) {
+        String rez = "";
+        for (Utilizator utilizator : list) {
+            rez += writeUtilizator(utilizator);
+            rez += ";";
+        }
+        return rez;
+    }
+
     @Override
     protected String createEntityAsString(Message entity) {
         Utilizator utilizator = entity.getFrom();
-        Utilizator utilizator2 = entity.getTo();
+        List<Utilizator> utilizatori = entity.getTo();
+        int size = utilizatori.size();
 
         if (entity.getReply() == -1)
             return entity.getId() + ";" +
-                    writeUtilizator(utilizator) + ";" +
-                    writeUtilizator(utilizator2) + ";" +
+                    writeUtilizator(utilizator) + ";" + size + ";" +
+                    writeListUtilizator(utilizatori) +
                     entity.getMessage() + ";" + entity.getDate() + ";" + "-1";
         return entity.getId() + ";" +
-                writeUtilizator(utilizator) + ";" +
-                writeUtilizator(utilizator2) + ";" +
+                writeUtilizator(utilizator) + ";" + size + ";" +
+                writeListUtilizator(utilizatori) +
                 entity.getMessage() + ";" + entity.getDate() + ";" +
                 entity.getReply();
     }

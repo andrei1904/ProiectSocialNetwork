@@ -31,23 +31,33 @@ public class MessageService {
     }
 
     private boolean suntEgali(Message message, Utilizator utilizator1, Utilizator utilizator2) {
-        return (message.getTo().equals(utilizator1) && message.getFrom().equals(utilizator2)) ||
-                (message.getTo().equals(utilizator2) && message.getFrom().equals(utilizator1));
-    }
-
-    public void sendMessage(int id1, int id2, String text) {
-        Utilizator utilizator1 = utilizatorService.getOne(id1);
-        Utilizator utilizator2 = utilizatorService.getOne(id2);
-
-        for (Message message : repo.findAll()) {
-            if (suntEgali(message, utilizator1, utilizator2)) {
-                throw new RepoException("Exista deja o conversatie intre acesti useri, " +
-                        "folositi replay!\n");
+        for (Utilizator utilizator : message.getTo()) {
+            if ((utilizator.equals(utilizator1) && message.getFrom().equals(utilizator2)) ||
+                    (utilizator.equals(utilizator2) && message.getFrom().equals(utilizator1))) {
+                return true;
             }
         }
+        return false;
+    }
 
+    public void sendMessage(int id1, List<Integer> to, String text) {
+        Utilizator utilizator1 = utilizatorService.getOne(id1);
 
-        Message message = new Message(utilizator1, utilizator2, text, LocalDateTime.now());
+        List<Utilizator> utilizatori = new ArrayList<>();
+        for (Integer id : to) {
+            Utilizator utilizator = utilizatorService.getOne(id);
+            utilizatori.add(utilizator);
+        }
+
+        // daca isi da mesaj singur
+        utilizatori.removeIf(utilizator -> utilizator.getId().equals(utilizator1.getId()));
+
+        // daca exista deja o conversatie intre utilizatori
+        for (Message message : repo.findAll()) {
+            utilizatori.removeIf(utilizator -> suntEgali(message, utilizator1, utilizator));
+        }
+
+        Message message = new Message(utilizator1, utilizatori, text, LocalDateTime.now());
         message.setId(genereazaId());
 
         repo.save(message);
@@ -60,11 +70,19 @@ public class MessageService {
         if (mesajInitial.isPresent()) {
             Utilizator utilizator2 = mesajInitial.get().getFrom();
 
-            Message message = new Message(utilizator, utilizator2, text, LocalDateTime.now());
-            message.setId(genereazaId());
-            mesajInitial.get().setReply(message.getId());
+            Message message;
+            if (idUtilizator == utilizator2.getId()) {
+                message = new Message(utilizator, mesajInitial.get().getTo(), text, LocalDateTime.now());
+            } else {
+                List<Utilizator> utilizatori = new ArrayList<>();
+                utilizatori.add(utilizator2);
+                message = new Message(utilizator, utilizatori, text, LocalDateTime.now());
+            }
 
-            repo.update(mesajInitial.get());
+            message.setId(genereazaId());
+            message.setReply(mesajInitial.get().getId());
+
+//            repo.update(mesajInitial.get());
             repo.save(message);
         } else {
             throw new RepoException("Nu exista mesajul la care doriti sa raspundeti!\n");
@@ -75,41 +93,56 @@ public class MessageService {
         Utilizator utilizator1 = utilizatorService.getOne(id1);
         Utilizator utilizator2 = utilizatorService.getOne(id2);
 
-        Message mesajInitial = null;
+        Message ultimulMesaj = null;
         boolean estePrimul = false;
 
+        // sorteaza mesajele descrescator dupa data
         List<Message> m = repo.findAll().stream()
-                .sorted(Comparator.comparing(Message::getDate))
+                .sorted(Comparator.comparing(Message::getDate).reversed())
                 .collect(Collectors.toList());
 
+        // gaseste ultimul mesaj
         for (Message message : m) {
             if (suntEgali(message, utilizator1, utilizator2)) {
-                mesajInitial = message;
+                ultimulMesaj = message;
                 break;
             }
         }
 
-        if (mesajInitial == null) {
-            return null;
+        // verifica daca mesajul exista
+        if (ultimulMesaj == null) {
+            throw new RepoException("Nu exista aceasta conversatie!\n");
         }
 
         List<Message> mesaje = new ArrayList<>();
-        mesaje.add(mesajInitial);
+        mesaje.add(ultimulMesaj);
 
         boolean sfarsit = false;
         while (!sfarsit) {
-            for (Message message : repo.findAll()) {
-                if (mesajInitial.getReply() == message.getId()) {
+            for (Message message : m) {
+                if (ultimulMesaj.getReply() == message.getId()) {
                     mesaje.add(message);
-                    mesajInitial = message;
+                    ultimulMesaj = message;
                     break;
                 }
             }
 
-            if (mesajInitial.getReply() == -1)
+            if (ultimulMesaj.getReply() == -1)
                 sfarsit = true;
         }
 
+        // le sortez in ordinea corecta
+        Collections.reverse(mesaje);
         return mesaje;
+    }
+
+    public void deleteMesaje(int id) {
+        for (Message mesaj : repo.findAll()) {
+            for (Utilizator utilizator : mesaj.getTo()) {
+                if (utilizator.getId() == id || mesaj.getFrom().getId() == id) {
+                    repo.delete(mesaj.getId());
+                }
+            }
+        }
     }
 }

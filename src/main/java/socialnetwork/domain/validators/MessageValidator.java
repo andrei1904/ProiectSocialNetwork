@@ -21,5 +21,9 @@ public class MessageValidator implements Validator<Message> {
         if (entity.getDate() == null) {
             throw new ValidationException("Data nu poate sa fie vida!\n");
         }
+
+        if (entity.getTo().isEmpty()) {
+            throw new ValidationException("Mesaj invalid!\n");
+        }
     }
 }

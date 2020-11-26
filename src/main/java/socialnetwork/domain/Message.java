@@ -1,22 +1,23 @@
 package socialnetwork.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 
 public class Message extends Entity<Integer> {
     Utilizator from;
-    Utilizator to;
+    List<Utilizator> to;
     String message;
     LocalDateTime date;
     int reply;
 
-    public Message(Utilizator from, Utilizator to, String message, LocalDateTime date) {
+    public Message(Utilizator from, List<Utilizator> to, String message, LocalDateTime date) {
         this.from = from;
         this.to = to;
         this.message = message;
         this.date = date;
-        reply = -1;
+        this.reply = -1;
     }
 
     public Utilizator getFrom() {
@@ -27,11 +28,11 @@ public class Message extends Entity<Integer> {
         this.from = from;
     }
 
-    public Utilizator getTo() {
+    public List<Utilizator> getTo() {
         return to;
     }
 
-    public void setTo(Utilizator to) {
+    public void setTo(List<Utilizator> to) {
         this.to = to;
     }
 
@@ -78,8 +79,18 @@ public class Message extends Entity<Integer> {
 
     @Override
     public String toString() {
-        return "De la: " + from.getFirstName() + " " + from.getLastName() +
-                ", pentru: " + to.getFirstName() + " " + to.getLastName() +
+        StringBuilder to = new StringBuilder();
+        int i = 0;
+        for (i = 0; i < this.to.size() - 1; i++) {
+            to.append(this.to.get(i));
+            to.append(", ");
+        }
+        to.append(this.to.get(i));
+
+
+        return "De la: " + from.toString() +
+                ", pentru: " + to + "; la data: " + date.getYear() + " " + date.getMonth() +
+                " " + date.getDayOfMonth() + ", ora: " + date.getHour() + ":" + date.getMinute() +
                 "\n" + message;
     }
 }

@@ -1,6 +1,7 @@
 package socialnetwork.service;
 
 import socialnetwork.domain.CererePrietenie;
+import socialnetwork.domain.Utilizator;
 import socialnetwork.repository.RepoException;
 import socialnetwork.repository.Repository;
 
@@ -8,10 +9,12 @@ import java.util.Random;
 
 public class CererePrietenieService {
     private final PrieteniiService prieteniiService;
+    private final UtilizatorService utilizatorService;
     private final Repository<Integer, CererePrietenie> repo;
 
-    public CererePrietenieService(PrieteniiService prieteniiService, Repository<Integer, CererePrietenie> repo) {
+    public CererePrietenieService(PrieteniiService prieteniiService, UtilizatorService utilizatorService, Repository<Integer, CererePrietenie> repo) {
         this.prieteniiService = prieteniiService;
+        this.utilizatorService = utilizatorService;
         this.repo = repo;
     }
 
@@ -32,6 +35,12 @@ public class CererePrietenieService {
         if (prieteniiService.existaPrietenie(id1, id2)) {
             throw new RepoException("Exista deja aceasta prietenie!\n");
         }
+
+        if (!utilizatorService.existaUtilizator(id1) ||
+                !utilizatorService.existaUtilizator(id2)) {
+            throw new RepoException("Nu exista unul dintre utilizatori!\n");
+        }
+
 
         for (CererePrietenie cp : repo.findAll()) {
             if ((cp.getId1() == id1 && cp.getId2() == id2) ||
@@ -56,6 +65,14 @@ public class CererePrietenieService {
                 }
                 repo.update(cererePrietenie);
                 break;
+            }
+        }
+    }
+
+    public void deleteCereri(int id) {
+        for (CererePrietenie cp : repo.findAll()) {
+            if (cp.getId2() == id || cp.getId1() == id) {
+                repo.delete(cp.getId());
             }
         }
     }
