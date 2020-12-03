@@ -6,7 +6,6 @@ import socialnetwork.domain.validators.CerereValidator;
 import socialnetwork.domain.validators.MessageValidator;
 import socialnetwork.domain.validators.PrietenieValidator;
 import socialnetwork.domain.validators.UtilizatorValidator;
-import socialnetwork.repository.RepoException;
 import socialnetwork.repository.Repository;
 import socialnetwork.repository.file.CererePrietenieFile;
 import socialnetwork.repository.file.MessageFile;
@@ -16,7 +15,7 @@ import socialnetwork.service.*;
 import socialnetwork.ui.ConsoleUserInterface;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void interfata() {
         String fileName = ApplicationContext.getPROPERTIES().getProperty("data.socialnetwork.users");
         String fileNamePrt = ApplicationContext.getPROPERTIES().getProperty("data.socialnetwork.friendships");
         String fileNameMessage = ApplicationContext.getPROPERTIES().getProperty("data.socialnetwork.messages");
@@ -42,6 +41,13 @@ public class Main {
                 prieteniiService, messageService, cererePrietenieService);
 
         consoleUserInterface.run();
+    }
+
+    public static void main(String[] args) {
+
+//        interfata();
+
+        MainFX.main(args);
     }
 }
 

@@ -95,12 +95,12 @@ public class PrieteniiService {
                         return new DtoPrieten(
                                 utilizatorService.getOne(x.getIdPrieten2()).getFirstName(),
                                 utilizatorService.getOne(x.getIdPrieten2()).getLastName(),
-                                x.getDate());
+                                x.getDate(), x.getId().getRight().intValue());
                     else
                         return new DtoPrieten(
                                 utilizatorService.getOne(x.getIdPrieten1()).getFirstName(),
                                 utilizatorService.getOne(x.getIdPrieten1()).getLastName(),
-                                x.getDate());
+                                x.getDate(), x.getId().getLeft().intValue());
                 })
                 .collect(Collectors.toList());
     }
@@ -117,12 +117,12 @@ public class PrieteniiService {
                         return new DtoPrieten(
                                 utilizatorService.getOne(x.getIdPrieten2()).getFirstName(),
                                 utilizatorService.getOne(x.getIdPrieten2()).getLastName(),
-                                x.getDate());
+                                x.getDate(), x.getId().getRight().intValue());
                     else
                         return new DtoPrieten(
                                 utilizatorService.getOne(x.getIdPrieten1()).getFirstName(),
                                 utilizatorService.getOne(x.getIdPrieten1()).getLastName(),
-                                x.getDate());
+                                x.getDate(), x.getId().getLeft().intValue());
                 })
                 .collect(Collectors.toList());
     }

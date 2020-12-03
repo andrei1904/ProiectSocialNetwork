@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0"
+            prefWidth="700.0" stylesheets="@../css/loginStyle.css" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="socialnetwork.controller.LoginController">
+   <AnchorPane prefHeight="200.0" prefWidth="700.0" styleClass="topPane">
+      <Text fill="WHITE" layoutX="672.0" layoutY="31.0" onMouseClicked="#closeStage" rotate="45.0"
+            strokeType="OUTSIDE" strokeWidth="0.0" text="+" wrappingWidth="14.0">
+         <font>
+            <Font name="Segoe UI Semibold" size="40.0"/>
+         </font>
+      </Text>
+   </AnchorPane>
+   <AnchorPane layoutX="150.0" layoutY="50.0" prefHeight="350.0" prefWidth="400.0" styleClass="cardPane">
+      <ImageView fitHeight="90.0" fitWidth="90.0" layoutX="155.0" layoutY="29.0" pickOnBounds="true"
+                 preserveRatio="true">
+         <Image url="@../images/login_icon.png"/>
+      </ImageView>
+      <TextField fx:id="textFieldUserId" focusTraversable="false" layoutX="112.0" layoutY="160.0"
+                 promptText="User ID">
+         <font>
+            <Font size="14.0"/>
+         </font>
+      </TextField>
+      <Button layoutX="174.0" layoutY="227.0" mnemonicParsing="false" onAction="#handleClickLogin"
+              styleClass="topPane" text="Login" textFill="WHITE">
+         <font>
+            <Font size="14.0"/>
+         </font>
+      </Button>
+   </AnchorPane>
+</AnchorPane>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="600.0" styleClass="topPane" stylesheets="@../css/loginStyle.css"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="socialnetwork.controller.CereriController">
+   <AnchorPane layoutX="21.0" layoutY="204.0" prefHeight="282.0" prefWidth="557.0" styleClass="cardPane">
+      <Button layoutX="193.0" layoutY="246.0" mnemonicParsing="false" onAction="#handleAcceptFriendRequest"
+              styleClass="topPane" text="Accept" textFill="WHITE">
+         <font>
+            <Font name="Consolas Bold" size="14.0"/>
+         </font>
+      </Button>
+      <Button layoutX="302.0" layoutY="246.0" mnemonicParsing="false" onAction="#handleDeclineFriendRequest"
+              styleClass="topPane" text="Decline" textFill="WHITE">
+         <font>
+            <Font name="Consolas Bold" size="14.0"/>
+         </font>
+      </Button>
+      <TableView fx:id="tableView" layoutX="29.0" layoutY="40.0" prefHeight="194.0" prefWidth="499.0"
+                 stylesheets="@../css/table.css">
+         <columns>
+            <TableColumn fx:id="tableColumnFirstName" prefWidth="126.33331298828125" text="First Name"/>
+            <TableColumn fx:id="tableColumnLastName" prefWidth="136.33334350585938" text="Last Name"/>
+            <TableColumn fx:id="tableColumnStatus" prefWidth="112.33331298828125" text="Status"/>
+            <TableColumn fx:id="tableColumnDate" prefWidth="123.6666259765625" text="Date"/>
+         </columns>
+      </TableView>
+      <Text layoutX="203.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Friend requests recived">
+         <font>
+            <Font name="Consolas Bold" size="12.0"/>
+         </font>
+      </Text>
+   </AnchorPane>
+   <AnchorPane layoutX="21.0" layoutY="16.0" prefHeight="178.0" prefWidth="557.0" styleClass="cardPane">
+      <TableView fx:id="tableViewSent" layoutX="29.0" layoutY="34.0" prefHeight="137.0" prefWidth="499.0"
+                 stylesheets="@../css/table.css">
+         <columns>
+            <TableColumn fx:id="tableColumnFirstNameSent" prefWidth="126.33331298828125" text="First Name"/>
+            <TableColumn fx:id="tableColumnLastNameSent" prefWidth="136.33334350585938" text="Last Name"/>
+            <TableColumn fx:id="tableColumnStatusSent" prefWidth="112.33331298828125" text="Status"/>
+            <TableColumn fx:id="tableColumnDateSent" prefWidth="123.6666259765625" text="Date"/>
+         </columns>
+      </TableView>
+      <Text layoutX="199.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Friend requests you sent">
+         <font>
+            <Font name="Consolas Bold" size="12.0"/>
+         </font>
+      </Text>
+   </AnchorPane>
+</AnchorPane>

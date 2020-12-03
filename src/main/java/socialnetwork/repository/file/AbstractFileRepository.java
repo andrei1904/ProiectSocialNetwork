@@ -1,10 +1,7 @@
 package socialnetwork.repository.file;
 
-import org.graalvm.compiler.nodes.calc.IntegerDivRemNode;
 import socialnetwork.domain.Entity;
-import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.domain.validators.Validator;
-import socialnetwork.repository.RepoException;
 import socialnetwork.repository.memory.InMemoryRepository;
 
 import java.io.*;
@@ -71,8 +68,6 @@ public abstract class AbstractFileRepository<ID, E extends Entity<ID>> extends I
             for (E entity : super.findAll()) {
                 writeToFile(entity);
             }
-        } else {
-            throw new RepoException("Id-ul nu este in lista de utilizatori!\n");
         }
         return e;
     }
