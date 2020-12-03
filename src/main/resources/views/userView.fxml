@@ -59,7 +59,7 @@
             <Font name="Consolas Bold" size="14.0"/>
          </font>
       </Text>
-      <TextField fx:id="textFieldName" layoutX="461.0" layoutY="61.0" prefHeight="25.0" prefWidth="122.0"
+      <TextField fx:id="textFieldName" onKeyPressed="#handleFilterName" layoutX="461.0" layoutY="61.0" prefHeight="25.0" prefWidth="122.0"
                  promptText="Name"/>
    </AnchorPane>
 </AnchorPane>

@@ -18,7 +18,8 @@ import socialnetwork.utils.observer.Observer;
 
 import java.io.IOException;
 import java.util.List;
-
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 public class UserController implements Observer<PrietenChangeEvent> {
@@ -136,5 +137,20 @@ public class UserController implements Observer<PrietenChangeEvent> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void handleFilter() {
+        String name = textFieldName.getText();
+
+        Predicate<DtoPrieten> byFirstNamePredicate = m -> m.getFirstName().contains(name);
+
+        model.setAll(service.prieteniiService.prieteniUtilizator(user.getId().intValue())
+                     .stream()
+                     .filter(byFirstNamePredicate)
+                     .collect(Collectors.toList()));
+    }
+
+    public void handleFilterName() {
+        handleFilter();
     }
 }
