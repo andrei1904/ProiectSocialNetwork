@@ -39,12 +39,13 @@ public class PrieteniiService {
     }
 
     public Optional<Prietenie> deletePrietenie(int id1, int id2) {
-        if (!prietenieService.existaPrietenie(id1, id2)) {
-            throw new RepoException("Nu exista aceasta prietenie!\n");
-        }
-
         Prietenie prietenie = new Prietenie(id1, id2);
-        return prietenieService.deletePrietenie(prietenie);
+        Optional<Prietenie> rez = prietenieService.deletePrietenie(prietenie);
+        if (!rez.isPresent()) {
+            Prietenie prietenie1 = new Prietenie(id2, id1);
+            rez = prietenieService.deletePrietenie(prietenie1);
+        }
+        return rez;
     }
 
     private List<Prietenie> getPrieteniiUtilizator(Utilizator utilizator) {

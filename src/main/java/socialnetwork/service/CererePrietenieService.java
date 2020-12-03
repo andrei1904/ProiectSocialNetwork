@@ -2,8 +2,6 @@ package socialnetwork.service;
 
 import socialnetwork.domain.CererePrietenie;
 import socialnetwork.domain.DtoCererePrietenie;
-import socialnetwork.domain.DtoPrieten;
-import socialnetwork.domain.Utilizator;
 import socialnetwork.repository.RepoException;
 import socialnetwork.repository.Repository;
 
@@ -50,8 +48,8 @@ public class CererePrietenieService {
 
         for (CererePrietenie cp : repo.findAll()) {
             if (((cp.getId1() == id1 && cp.getId2() == id2) ||
-                (cp.getId1() == id2 && cp.getId2() == id1)) &&
-                !cp.getStatus().equals("rejected")) {
+                    (cp.getId1() == id2 && cp.getId2() == id1)) &&
+                    !cp.getStatus().equals("rejected")) {
                 throw new RepoException("Exista deja o cerere de prietenie trimisa!\n");
             }
         }
@@ -62,7 +60,7 @@ public class CererePrietenieService {
     public void confirmFriendRequest(int id, int raspuns) {
         for (CererePrietenie cererePrietenie : repo.findAll()) {
             if (cererePrietenie.getId() == id &&
-                cererePrietenie.getStatus().equals("pending")) {
+                    cererePrietenie.getStatus().equals("pending")) {
                 if (raspuns == 1) {
                     prieteniiService.addPrietenie(cererePrietenie.getId1(),
                             cererePrietenie.getId2());
@@ -79,6 +77,15 @@ public class CererePrietenieService {
     public void deleteCereri(int id) {
         for (CererePrietenie cp : repo.findAll()) {
             if (cp.getId2() == id || cp.getId1() == id) {
+                repo.delete(cp.getId());
+            }
+        }
+    }
+
+    public void deleteCerere(int id1, int id2) {
+        for (CererePrietenie cp : repo.findAll()) {
+            if ((cp.getId1() == id1 && cp.getId2() == id2) ||
+                    (cp.getId2() == id1 && cp.getId1() == id2)) {
                 repo.delete(cp.getId());
             }
         }

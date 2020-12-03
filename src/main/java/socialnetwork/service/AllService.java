@@ -1,17 +1,11 @@
 package socialnetwork.service;
 
-
-import socialnetwork.domain.CererePrietenie;
-import socialnetwork.domain.Prietenie;
-import socialnetwork.utils.events.ChangeEventType;
 import socialnetwork.utils.events.PrietenChangeEvent;
-import socialnetwork.utils.events.CererePrietenieChangeEvent;
 import socialnetwork.utils.observer.Observable;
 import socialnetwork.utils.observer.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 public class AllService implements Observable<PrietenChangeEvent> {
@@ -28,10 +22,8 @@ public class AllService implements Observable<PrietenChangeEvent> {
     }
 
     public void deletePrietenie(int id1, int id2) {
-        Optional<Prietenie> prietenie = prieteniiService.deletePrietenie(id1, id2);
-        if (!prietenie.isPresent()) {
-            prieteniiService.deletePrietenie(id2, id1);
-        }
+        prieteniiService.deletePrietenie(id1, id2);
+        cererePrietenieService.deleteCerere(id1, id2);
         notifyObservers();
     }
 
@@ -50,7 +42,7 @@ public class AllService implements Observable<PrietenChangeEvent> {
         notifyObservers();
     }
 
-    private List<Observer<PrietenChangeEvent>> observers = new ArrayList<>();
+    private final List<Observer<PrietenChangeEvent>> observers = new ArrayList<>();
 
     @Override
     public void addObserver(Observer<PrietenChangeEvent> e) {
