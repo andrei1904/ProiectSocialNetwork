@@ -4,27 +4,24 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="350.0" prefWidth="400.0" styleClass="topPane" stylesheets="@../css/loginStyle.css"
-            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="socialnetwork.controller.AdaugaPrieteniController">
+<AnchorPane prefHeight="350.0" prefWidth="400.0" styleClass="topPane" stylesheets="@../css/loginStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="socialnetwork.controller.AdaugaPrieteniController">
     <AnchorPane layoutX="25.0" layoutY="20.0" prefHeight="313.0" prefWidth="349.0" styleClass="cardPane">
         <Text layoutX="150.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search">
             <font>
-                <Font name="Consolas" size="16.0"/>
+                <Font name="Consolas" size="16.0" />
             </font>
         </Text>
-        <TableView fx:id="tableView" layoutX="30.0" layoutY="77.0" prefHeight="200.0" prefWidth="290.0"
-                   stylesheets="@../css/table.css">
+        <TableView fx:id="tableView" layoutX="30.0" layoutY="77.0" prefHeight="200.0" prefWidth="290.0" stylesheets="@../css/table.css">
             <columns>
-                <TableColumn fx:id="tableColumnFirstName" prefWidth="143.3333396911621" text="First Name"/>
-                <TableColumn fx:id="tableColumnLastName" prefWidth="145.33335876464844" text="Last Name"/>
+                <TableColumn fx:id="tableColumnFirstName" prefWidth="143.3333396911621" text="First Name" />
+                <TableColumn fx:id="tableColumnLastName" prefWidth="145.33335876464844" text="Last Name" />
             </columns>
         </TableView>
-        <Button layoutX="125.0" layoutY="277.0" mnemonicParsing="false" onAction="#handleAddFriend"
-                prefHeight="27.0" prefWidth="108.0" styleClass="topPane" text="Add friend" textFill="WHITE">
+        <Button layoutX="125.0" layoutY="277.0" mnemonicParsing="false" onAction="#handleAddFriend" prefHeight="27.0" prefWidth="108.0" styleClass="topPane" text="Add friend" textFill="WHITE">
             <font>
-                <Font name="Consolas" size="14.0"/>
+                <Font name="Consolas" size="14.0" />
             </font>
         </Button>
+      <TextField fx:id="textFieldName" onKeyPressed="#handleFilterName" layoutX="100.0" layoutY="41.0" promptText="First Name" />
     </AnchorPane>
 </AnchorPane>

@@ -5,61 +5,52 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="450.0" prefWidth="700.0" styleClass="root" stylesheets="@../css/loginStyle.css"
-            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="socialnetwork.controller.UserController">
+<AnchorPane prefHeight="450.0" prefWidth="700.0" styleClass="root" stylesheets="@../css/loginStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="socialnetwork.controller.UserController">
    <AnchorPane prefHeight="184.0" prefWidth="700.0" styleClass="topPane">
-      <Label fx:id="labelUserName" layoutX="127.0" layoutY="29.0" prefHeight="43.0" prefWidth="386.0"
-             text="Welcome back, ddadada" textFill="WHITE">
+      <Label fx:id="labelUserName" layoutX="127.0" layoutY="29.0" prefHeight="43.0" prefWidth="386.0" text="Welcome back, ddadada" textFill="WHITE">
          <font>
-            <Font name="Consolas" size="24.0"/>
+            <Font name="Consolas" size="24.0" />
          </font>
       </Label>
       <AnchorPane layoutX="14.0" layoutY="11.0" prefHeight="80.0" prefWidth="80.0" styleClass="cardPane">
-         <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../images/login_icon.png"/>
+         <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../images/login_icon.png" />
          </ImageView>
       </AnchorPane>
    </AnchorPane>
    <AnchorPane layoutX="51.0" layoutY="120.0" prefHeight="316.0" prefWidth="597.0" styleClass="cardPane">
       <Text fill="#3196de" layoutX="175.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your friends">
          <font>
-            <Font name="Consolas Bold" size="16.0"/>
+            <Font name="Consolas Bold" size="16.0" />
          </font>
       </Text>
-      <Button layoutX="461.0" layoutY="126.0" mnemonicParsing="false" onAction="#handleAddMoreFriends"
-              prefHeight="33.0" prefWidth="122.0" styleClass="topPane" text="Add more friends" textFill="WHITE">
+      <Button layoutX="461.0" layoutY="126.0" mnemonicParsing="false" onAction="#handleAddMoreFriends" prefHeight="33.0" prefWidth="122.0" styleClass="topPane" text="Add more friends" textFill="WHITE">
          <font>
-            <Font name="Consolas Bold" size="12.0"/>
+            <Font name="Consolas Bold" size="12.0" />
          </font>
       </Button>
-      <Button layoutX="461.0" layoutY="182.0" mnemonicParsing="false" onAction="#handleDeleteFriend"
-              prefHeight="33.0" prefWidth="122.0" styleClass="topPane" text="Delete friend" textFill="WHITE">
+      <Button layoutX="461.0" layoutY="182.0" mnemonicParsing="false" onAction="#handleDeleteFriend" prefHeight="33.0" prefWidth="122.0" styleClass="topPane" text="Delete friend" textFill="WHITE">
          <font>
-            <Font name="Consolas Bold" size="12.0"/>
+            <Font name="Consolas Bold" size="12.0" />
          </font>
       </Button>
-      <Button layoutX="461.0" layoutY="236.0" mnemonicParsing="false" onAction="#handleFriendRequests"
-              prefHeight="33.0" prefWidth="122.0" styleClass="topPane" text="Friend requests" textFill="WHITE">
+      <Button layoutX="461.0" layoutY="236.0" mnemonicParsing="false" onAction="#handleFriendRequests" prefHeight="33.0" prefWidth="122.0" styleClass="topPane" text="Friend requests" textFill="WHITE">
          <font>
-            <Font name="Consolas Bold" size="12.0"/>
+            <Font name="Consolas Bold" size="12.0" />
          </font>
       </Button>
-      <TableView fx:id="tableView" layoutX="14.0" layoutY="51.0" prefHeight="258.0" prefWidth="425.0"
-                 stylesheets="@../css/table.css">
+      <TableView fx:id="tableView" layoutX="14.0" layoutY="51.0" prefHeight="258.0" prefWidth="425.0" stylesheets="@../css/table.css">
          <columns>
-            <TableColumn fx:id="tableColumnFirstName" prefWidth="138.0" text="First Name"/>
-            <TableColumn fx:id="tableColumnLastName" prefWidth="150.0" text="Last Name"/>
-            <TableColumn fx:id="tableColumnDate" prefWidth="136.0" text="Date"/>
+            <TableColumn fx:id="tableColumnFirstName" prefWidth="138.0" text="First Name" />
+            <TableColumn fx:id="tableColumnLastName" prefWidth="150.0" text="Last Name" />
+            <TableColumn fx:id="tableColumnDate" prefWidth="136.0" text="Date" />
          </columns>
       </TableView>
       <Text layoutX="499.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search">
          <font>
-            <Font name="Consolas Bold" size="14.0"/>
+            <Font name="Consolas Bold" size="14.0" />
          </font>
       </Text>
-      <TextField fx:id="textFieldName" onKeyPressed="#handleFilterName" layoutX="461.0" layoutY="61.0" prefHeight="25.0" prefWidth="122.0"
-                 promptText="Name"/>
+      <TextField fx:id="textFieldName" layoutX="461.0" layoutY="61.0" onKeyPressed="#handleFilterName" prefHeight="25.0" prefWidth="122.0" promptText="First Name" />
    </AnchorPane>
 </AnchorPane>
